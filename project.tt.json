@@ -1,0 +1,13 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "elebike_mini",
+  "description": "elebike mini",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram"
+}
