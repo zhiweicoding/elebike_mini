@@ -2,7 +2,7 @@
   "miniprogramRoot": "./dist",
   "projectname": "elebike_mini",
   "description": "elebike mini",
-  "appid": "touristappid",
+  "appid": "wxc76acda6f97a2b46",
   "setting": {
     "urlCheck": true,
     "es6": false,

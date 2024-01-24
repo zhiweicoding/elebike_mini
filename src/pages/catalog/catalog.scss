@@ -1,0 +1,152 @@
+.container {
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+}
+
+.cate-item {
+  margin-top: 80px;
+}
+
+.cate-item-empty {
+  margin-top: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &-img {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 50px;
+  }
+
+  &-txt {
+    text-align: center;
+    font-size: 28px;
+    color: #999;
+    margin-top: 30px;
+  }
+}
+
+.catalog-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 750px;
+  height: 80px;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+
+  &-model {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-tag {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-order {
+    display: flex;
+    flex-direction: row;
+    width: 33%;
+    justify-content: center;
+    align-items: center;
+
+    &-txt {
+
+    }
+
+    &-icon {
+    }
+  }
+}
+
+.catalog-box-tag {
+  width: 650px;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 30px 50px 30px 50px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  z-index: 1001;
+  top: 78px;
+  background-color: #fff;
+  animation: slideDown 0.5s ease forwards;
+}
+
+.catalog-box-model {
+  width: 650px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 30px 50px 30px 50px;
+  position: fixed;
+  top: 78px;
+  z-index: 1001;
+  background-color: #fff;
+  animation: slideDown 0.5s ease forwards;
+
+  &-place, &-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    color: #444;
+    font-size: 26px;
+
+    &-txt {
+      margin-bottom: 20px;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    &-grid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      &-item {
+        border: #444 1px solid;
+        border-radius: 20px;
+        padding: 3px 20px;
+        margin: 18px 55px 18px 0;
+      }
+    }
+  }
+
+}
+
+.catalog-active {
+  border: #f5222d 1px solid;
+  color: #f5222d;
+}
+
+.catalog-hidden {
+  display: none;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-5%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -2,6 +2,8 @@ import { Component, PropsWithChildren } from 'react'
 import sr from 'sr-sdk-wxapp'
 
 import './app.scss'
+import './custom-theme.scss'
+
 
 /**
    * 有数埋点SDK 默认配置
@@ -13,22 +15,22 @@ import './app.scss'
      * 有数 - ka‘接入测试用’ 分配的 app_id，对应的业务接口人负责
      */
     token: 'bi6cdbda95ae2640ec',
-  
+
     /**
      * 微信小程序appID，以wx开头
      */
-    appid: 'touristappid',
-  
+    appid: 'wxc76acda6f97a2b46',
+
     /**
      * 如果使用了小程序插件，需要设置为 true
      */
-    usePlugin: false,
-  
+    usePlugin: true,
+
     /**
      * 开启打印调试信息， 默认 false
      */
     debug: true,
-  
+
     /**
      * 建议开启-开启自动代理 Page， 默认 false
      * sdk 负责上报页面的 browse 、leave、share 等事件

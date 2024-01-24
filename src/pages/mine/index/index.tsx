@@ -117,7 +117,7 @@ const Index: React.FC = () => {
       />
       {topics.length > 0 && (
         <View className="a-section ">
-          <View className="a-section-title">
+          <View className="h">
             <View>
               <Navigator openType="switchTab" url={'/pages/catalog/catalog'}>
                 <Text className="txt">精选推荐</Text>
@@ -132,15 +132,18 @@ const Index: React.FC = () => {
       {floorGoods.map((item) => {
         return (
           <>
-            {item.goodsList.length > 0 && (
-              <View className="floor-good-grid" key={item.id}>
-                <View className="floor-good-grid-title">{item.name}</View>
+            {item.goodsList.length>0 && (
+              <View className="good-grid" key={item.id}>
+                <View className="h">
+                  <View>
+                    <Text>{item.name}</Text>
+                  </View>
+                </View>
                 <TwoColumnGoodList
                   goodList={item.goodsList}
                   floorName={item.name}
-                  floorId={item.id}
-                  showMore={true}
-                />
+                  floorId={item.id
+                  }/>
               </View>
             )}
           </>

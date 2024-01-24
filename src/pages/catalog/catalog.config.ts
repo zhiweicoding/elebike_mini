@@ -1,5 +1,5 @@
 export default {
-  navigationBarTitleText: '首页',
+  navigationBarTitleText: '分类',
   enablePullDownRefresh: false,
   enableShareTimeline: true
 }
