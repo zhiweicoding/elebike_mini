@@ -3,7 +3,7 @@ export default {
     'pages/index/index',
     'pages/mine/index/index',
     'pages/catalog/catalog',
-    'pages/webview/catalog',
+    'pages/webview/webview',
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -14,7 +14,7 @@ export default {
   tabBar: {
     color: '#868686',
     selectedColor: '#f5222d',
-    backgroungColor: '#fff',
+    backgroundColor: '#fff',
     borderStyle: 'black',
     list: [
       {

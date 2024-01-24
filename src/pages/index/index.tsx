@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {useDidShow, useDidHide, useShareAppMessage, usePageScroll} from '@tarojs/taro';
+import Taro, {useDidShow, useDidHide, useShareAppMessage, usePageScroll} from '@tarojs/taro';
 import './index.scss'
 import {
   Text,
@@ -83,6 +83,12 @@ const Index: React.FC = () => {
     }
   });
 
+  const swiperAction = (link: string) => {
+    Taro.navigateTo({
+      url: `/pages/webview/webview?url=${link}`
+    });
+  };
+
   usePageScroll((res) => {
     console.log(res)
   });
@@ -98,7 +104,7 @@ const Index: React.FC = () => {
       >
         {banner.map((item) => {
           return (
-            <SwiperItem key={item.id}>
+            <SwiperItem key={item.id} onClick={swiperAction.bind(`${item.link}`)}>
               <Navigator url={item.link}>
                 <Image mode={'aspectFill'} fadeIn={true} src={item.imageUrl}></Image>
               </Navigator>

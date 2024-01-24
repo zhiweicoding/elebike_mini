@@ -1,16 +1,14 @@
-import Taro, {useRouter} from '@tarojs/taro'
+import {useRouter} from '@tarojs/taro'
 import {View, WebView} from '@tarojs/components'
 import React, {useEffect} from 'react'
+import './webview.scss'
 
 const WebViewPage: React.FC = () => {
   const router = useRouter();
-  const {url, title} = router.params; // 获取传递的参数
+  const {url} = router.params; // 获取传递的参数
 
   useEffect(() => {
     //componentDidMount
-    Taro.setNavigationBarTitle({
-      title: title || ''
-    });
   }, []);
 
   return (
