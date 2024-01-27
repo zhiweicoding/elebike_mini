@@ -3,7 +3,11 @@ export default {
     'pages/index/index',
     'pages/mine/index/index',
     'pages/catalog/catalog',
+    'pages/detail/detail',
     'pages/webview/webview',
+    'pages/mine/feedback/feedback',
+    'pages/mine/footprint/footprint',
+    'pages/error/error',
   ],
   window: {
     backgroundTextStyle: 'light',

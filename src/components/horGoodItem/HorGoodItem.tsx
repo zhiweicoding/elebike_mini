@@ -1,11 +1,11 @@
 // HorGoodItem.tsx
 import React from 'react';
-import {View, Image, Text, ScrollView} from '@tarojs/components';
+import {View, Image, Text} from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import './HorGoodItem.scss';
 
 export type HorGoodItemProps = {
-  goodList: Params.GoodItem[];
+  goodItem: Params.GoodItem;
 };
 
 const jumpDetail = async (event: any) => {
@@ -15,26 +15,21 @@ const jumpDetail = async (event: any) => {
   });
 };
 
-const HorGoodItem: React.FC<HorGoodItemProps> = (props) => {
+const HorGoodList: React.FC<HorGoodItemProps> = (props) => {
   return (
-    <ScrollView className="horGoodList" scrollX>
-      {props.goodList.map((item) => {
-        return (
-          <View className="horGoodList-item" key={item.goodId} data-good-id={item.goodId} onClick={jumpDetail}>
-            <Image
-              mode={'aspectFill'}
-              className="horGoodList-item-img"
-              src={item.scenePicUrl || ''}
-            ></Image>
-            <View className="horGoodList-item-grid">
-              <Text className="horGoodList-item-grid-title">{item.goodTitle}</Text>
-              <Text className="horGoodList-item-grid-brief">{item.goodBrief}</Text>
-            </View>
-          </View>
-        )
-      })}
-    </ScrollView>
+    <View className="horGoodList-item" key={props.goodItem.goodId} data-good-id={props.goodItem.goodId}
+          onClick={jumpDetail}>
+      <Image
+        mode={'aspectFill'}
+        className="horGoodList-item-img"
+        src={props.goodItem.scenePicUrl || ''}
+      ></Image>
+      <View className="horGoodList-item-grid">
+        <Text className="horGoodList-item-grid-title">{props.goodItem.goodTitle}</Text>
+        <Text className="horGoodList-item-grid-brief">{props.goodItem.goodBrief}</Text>
+      </View>
+    </View>
   );
 };
 
-export default HorGoodItem;
+export default HorGoodList;

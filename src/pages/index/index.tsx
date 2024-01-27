@@ -11,8 +11,9 @@ import {
 } from '@tarojs/components'
 import {AtSearchBar} from 'taro-ui'
 import {queryHome} from '@bike/services/api';
-import HorGoodItem from "@bike/components/horGoodItem/HorGoodItem";
+import HorGoodList from "@bike/components/horGoodList/HorGoodList";
 import TwoColumnGoodList from "@bike/components/twoColumnGoodList/TwoColumnGoodList";
+import Staff from "@bike/components/staff/staff";
 
 const Index: React.FC = () => {
   const defaultBanner: Params.Banner[] = [
@@ -65,6 +66,14 @@ const Index: React.FC = () => {
 
   const onActionClick = () => {
     console.log('开始搜索');
+    Taro.setStorage({
+      key:"searchValueRouter",
+      data:searchValue
+    }).then(()=>{
+      Taro.switchTab({
+        url: `/pages/catalog/catalog`
+      });
+    });
   };
 
   useDidShow(() => {
@@ -84,6 +93,7 @@ const Index: React.FC = () => {
   });
 
   const swiperAction = (link: string) => {
+    console.log(link)
     Taro.navigateTo({
       url: `/pages/webview/webview?url=${link}`
     });
@@ -95,6 +105,7 @@ const Index: React.FC = () => {
 
   return (
     <View className='container'>
+      <Staff/>
       <Swiper
         duration={1000}
         autoplay={true}
@@ -104,7 +115,7 @@ const Index: React.FC = () => {
       >
         {banner.map((item) => {
           return (
-            <SwiperItem key={item.id} onClick={swiperAction.bind(`${item.link}`)}>
+            <SwiperItem key={item.id} onClick={() => swiperAction(item.link)}>
               <Navigator url={item.link}>
                 <Image mode={'aspectFill'} fadeIn={true} src={item.imageUrl}></Image>
               </Navigator>
@@ -118,7 +129,7 @@ const Index: React.FC = () => {
         className={'searchBar'}
         value={searchValue}
         onChange={onChange}
-        placeholder={'搜索, 更多产品类型'}
+        placeholder={'搜索, 更多产品'}
         onActionClick={onActionClick}
       />
       {topics.length > 0 && (
@@ -130,7 +141,7 @@ const Index: React.FC = () => {
               </Navigator>
             </View>
           </View>
-          <HorGoodItem
+          <HorGoodList
             goodList={topics}
           />
         </View>
@@ -145,7 +156,6 @@ const Index: React.FC = () => {
                   goodList={item.goodsList}
                   floorName={item.name}
                   floorId={item.id}
-                  showMore={true}
                 />
               </View>
             )}

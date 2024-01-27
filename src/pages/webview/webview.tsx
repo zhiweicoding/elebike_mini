@@ -13,7 +13,7 @@ const WebViewPage: React.FC = () => {
 
   return (
     <View className={'container'}>
-      <WebView src={url || ''}/>
+      <WebView src={url || ''} progressbarColor={'#f5222d'}/>
     </View>
   )
 }

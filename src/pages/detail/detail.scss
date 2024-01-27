@@ -1,0 +1,17 @@
+.contain {
+  width: 100%;
+
+  &-scoll {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+  }
+}
+
+.scrollImg {
+  width: 750px;
+  margin: 0 auto;
+  padding: 0;
+  display: block;
+}

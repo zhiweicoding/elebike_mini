@@ -40,7 +40,7 @@ const GoodItem: React.FC<GoodItemProps> = (props) => {
         {/*    <View className={'good-grid-mid-price-num'}>{props.goodItem.retailPrice}</View>*/}
         {/*    <View className={'good-grid-mid-price-after'}>到手价</View>*/}
         {/*  </View>*/}
-        {/*  <View className={'good-grid-mid-like'}>{props.goodItem.likeNum+'+想要'}</View>*/}
+        {/*  <View className={'good-grid-mid-store'}>{props.goodItem.likeNum+'+想要'}</View>*/}
         {/*</View>*/}
         <View className="good-grid-brief">
           <View className="good-grid-brief-left">{props.goodItem.goodBrief}</View>

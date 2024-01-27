@@ -8,8 +8,9 @@ import {
 } from '@tarojs/components'
 import {queryCatalog, querySymbol} from '@bike/services/api';
 import noData from '@bike/assets/no-data.png';
-import TwoColumnGoodList from "@bike/components/twoColumnGoodList/TwoColumnGoodList";
-import {AtTag} from "taro-ui";
+import {AtSearchBar} from "taro-ui";
+import Staff from "@bike/components/staff/staff";
+import TwoColumnWholeGoodList from "@bike/components/twoColumnWholeGoodList/TwoColumnWholeGoodList";
 
 const Index: React.FC = () => {
 
@@ -44,6 +45,7 @@ const Index: React.FC = () => {
     "checked": true
   }]);
   const [goodArray, setGoodArray] = useState<Params.GoodItem[]>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
 
   useEffect(() => {
     //componentDidMount
@@ -56,11 +58,6 @@ const Index: React.FC = () => {
       }
     });
 
-    //如果存在symbolId，就设置为当前的symbolId
-    const catalogSymbolId = Taro.getStorageSync('catalogSymbolId')
-    if (catalogSymbolId && catalogSymbolId != '-1') {
-      setSymbolId(catalogSymbolId);
-    }
     // 返回的函数将在组件卸载时执行
     return () => {
       //componentWillUnmount
@@ -69,13 +66,13 @@ const Index: React.FC = () => {
 
   const loadData = async (param: Params.CatalogParam) => {
     try {
+      Taro.showLoading({
+        title: '加载中',
+      });
       const response: Params.CatalogEntity = await queryCatalog(param);
       if (response) {
-        if (response.goodsList && response.goodsList.length > 0) {
-          setGoodArray(response.goodsList);
-        }
-      } else {
-        console.warn(`queryHome response is null`)
+        Taro.hideLoading();
+        setGoodArray(response.goodsList);
       }
     } catch (error) {
       console.error(error)
@@ -83,14 +80,49 @@ const Index: React.FC = () => {
   };
 
   useDidShow(() => {
-    loadData({
-      symbolId: symbolId,
-      place: place,
-      order: order,
-      isChosen: isChosen,
-      isNew: isNew,
-      isPopular: isPopular,
-    }).then(r => console.log(r));
+    const searchValueRouter = Taro.getStorageSync('searchValueRouter')
+    //如果存在symbolId，就设置为当前的symbolId
+    const catalogSymbolId = Taro.getStorageSync('catalogSymbolId')
+    if (catalogSymbolId && catalogSymbolId != '-1') {
+      setSymbolId(catalogSymbolId);
+      Taro.setStorage({
+        key: "catalogSymbolId",
+        data: catalogSymbolId
+      }).then(() => {
+        tempSymbolArray.map((item) => {
+          item.checked = item.symbolId == catalogSymbolId;
+        });
+      });
+    }
+    if (searchValueRouter && searchValueRouter.length > 0) {
+      setSearchValue(searchValueRouter);
+      Taro.setStorage({
+        key: "searchValueRouter",
+        data: ""
+      }).then(r => {
+        console.log(r)
+        loadData({
+          symbolId: symbolId,
+          place: place,
+          order: order,
+          isChosen: isChosen,
+          isNew: isNew,
+          isPopular: isPopular,
+          searchValue: searchValueRouter,
+        }).then(r => console.log(r));
+      });
+
+    } else {
+      loadData({
+        symbolId: symbolId,
+        place: place,
+        order: order,
+        isChosen: isChosen,
+        isNew: isNew,
+        isPopular: isPopular,
+        searchValue: searchValue,
+      }).then(r => console.log(r));
+    }
   });
 
   useDidHide(() => {
@@ -126,6 +158,14 @@ const Index: React.FC = () => {
   const selectCategory = async (event: any) => {
     const symbolId = event.currentTarget.dataset.symbolId;
     setSymbolId(symbolId);
+    Taro.setStorage({
+      key: "catalogSymbolId",
+      data: symbolId
+    }).then(() => {
+      tempSymbolArray.map((item) => {
+        item.checked = item.symbolId == symbolId;
+      });
+    });
     loadData({
       symbolId: symbolId,
       place: place,
@@ -133,8 +173,123 @@ const Index: React.FC = () => {
       isChosen: isChosen,
       isNew: isNew,
       isPopular: isPopular,
+      searchValue: searchValue,
     }).then(r => console.log(r));
   };
+
+  const onChange = (value: string) => {
+    setSearchValue(value);
+  };
+
+  const onActionClick = () => {
+    console.log('开始搜索');
+    setShowSymbol(false);
+    setShowCatalog(false)
+    loadData({
+      symbolId: symbolId,
+      place: place,
+      order: order,
+      isChosen: isChosen,
+      isNew: isNew,
+      isPopular: isPopular,
+      searchValue: searchValue,
+    }).then(r => console.log(r));
+  };
+
+  const popularAction = async (p: number) => {
+    setIsPopular(p);
+    loadData({
+      symbolId: symbolId,
+      place: place,
+      order: order,
+      isChosen: isChosen,
+      isNew: isNew,
+      isPopular: p,
+      searchValue: searchValue,
+    }).then(r => console.log(r));
+  };
+
+  const chosenAction = async (c: number) => {
+    setIsChosen(c);
+    loadData({
+      symbolId: symbolId,
+      place: place,
+      order: order,
+      isChosen: c,
+      isNew: isNew,
+      isPopular: isPopular,
+      searchValue: searchValue,
+    }).then(r => console.log(r));
+  };
+
+  const newAction = async (n: number) => {
+    setIsNew(n);
+    loadData({
+      symbolId: symbolId,
+      place: place,
+      order: order,
+      isChosen: isChosen,
+      isNew: n,
+      isPopular: isPopular,
+      searchValue: searchValue,
+    }).then(r => console.log(r));
+  };
+
+  const orderAction = async (event: any) => {
+    const order = event.currentTarget.dataset.order;
+    if (order == 'asc') {
+      setOrder('desc');
+    } else {
+      setOrder('asc');
+    }
+    setShowCatalog(false)
+    setShowSymbol(false)
+    loadData({
+      symbolId: symbolId,
+      place: place,
+      order: order,
+      isChosen: isChosen,
+      isNew: isNew,
+      isPopular: isPopular,
+      searchValue: searchValue,
+    }).then(r => console.log(r));
+  };
+
+  const catalogAction = async () => {
+    if (showCatalog) {
+      setShowCatalog(false);
+    } else {
+      setShowCatalog(true);
+      setShowSymbol(false)
+    }
+  }
+
+  const symbolAction = async () => {
+    if (showSymbol) {
+      setShowSymbol(false);
+    } else {
+      setShowSymbol(true);
+      setShowCatalog(false)
+    }
+  }
+  const onClearAction = async () => {
+    setSearchValue('');
+    Taro.setStorage({
+      key: "searchValueRouter",
+      data: ""
+    }).then(r => {
+      console.log(r)
+      loadData({
+        symbolId: symbolId,
+        place: place,
+        order: order,
+        isChosen: isChosen,
+        isNew: isNew,
+        isPopular: isPopular,
+        searchValue: "",
+      }).then(r => console.log(r));
+    });
+  }
 
   const renderSymbol = (sa: Params.SymbolListItem[]) => {
     if (!sa || sa.length === 0) {
@@ -184,94 +339,65 @@ const Index: React.FC = () => {
     )
   }
 
-  const popularAction = async (active: boolean) => {
-    if (active) {
-      setIsPopular(-1);
-    } else {
-      setIsPopular(1);
-    }
-    loadData({
-      symbolId: symbolId,
-      place: place,
-      order: order,
-      isChosen: isChosen,
-      isNew: isNew,
-      isPopular: isPopular,
-    }).then(r => console.log(r));
-  };
-
-  const chosenAction = async (active: boolean) => {
-    if (active) {
-      setIsChosen(-1);
-    } else {
-      setIsChosen(1);
-    }
-    loadData({
-      symbolId: symbolId,
-      place: place,
-      order: order,
-      isChosen: isChosen,
-      isNew: isNew,
-      isPopular: isPopular,
-    }).then(r => console.log(r));
-  };
-
-  const newAction = async (active: boolean) => {
-    if (active) {
-      setIsNew(-1);
-    } else {
-      setIsNew(1);
-    }
-    loadData({
-      symbolId: symbolId,
-      place: place,
-      order: order,
-      isChosen: isChosen,
-      isNew: isNew,
-      isPopular: isPopular,
-    }).then(r => console.log(r));
-  };
-
-  const orderAction = async (event: any) => {
-    const order = event.currentTarget.dataset.order;
-    if (order == 'asc') {
-      setOrder('desc');
-    } else {
-      setOrder('asc');
-    }
-    setShowCatalog(false)
-    setShowSymbol(false)
-    loadData({
-      symbolId: symbolId,
-      place: place,
-      order: order,
-      isChosen: isChosen,
-      isNew: isNew,
-      isPopular: isPopular,
-    }).then(r => console.log(r));
-  };
-
-  const catalogAction = async () => {
-    if (showCatalog) {
-      setShowCatalog(false);
-    } else {
-      setShowCatalog(true);
-      setShowSymbol(false)
-    }
+  const renderCatalog = () => {
+    return (
+      <View className={showCatalog ? 'catalog-box-tag ' : 'catalog-box-tag catalog-hidden'}>
+        <View className={'catalog-box-tag-one'}>
+          <View className={'catalog-box-tag-one-txt'}>爆款商品</View>
+          <View className={'catalog-box-tag-one-grid'}>
+            <View
+              onClick={() => popularAction(-1)}
+              className={'catalog-box-tag-one-grid-item ' + (isPopular == -1 ? 'catalog-active' : '')}>全部</View>
+            <View
+              onClick={() => popularAction(1)}
+              className={'catalog-box-tag-one-grid-item ' + (isPopular == 1 ? 'catalog-active' : '')}>是</View>
+            <View onClick={() => popularAction(0)}
+                  className={'catalog-box-tag-one-grid-item ' + (isPopular == 0 ? 'catalog-active' : '')}>否</View>
+          </View>
+        </View>
+        <View className={'catalog-box-tag-one'}>
+          <View className={'catalog-box-tag-one-txt'}>新款推荐</View>
+          <View className={'catalog-box-tag-one-grid'}>
+            <View
+              onClick={() => newAction(-1)}
+              className={'catalog-box-tag-one-grid-item ' + (isNew == -1 ? 'catalog-active' : '')}>全部</View>
+            <View
+              onClick={() => newAction(1)}
+              className={'catalog-box-tag-one-grid-item ' + (isNew == 1 ? 'catalog-active' : '')}>是</View>
+            <View onClick={() => newAction(0)}
+                  className={'catalog-box-tag-one-grid-item ' + (isNew == 0 ? 'catalog-active' : '')}>否</View>
+          </View>
+        </View>
+        <View className={'catalog-box-tag-one'}>
+          <View className={'catalog-box-tag-one-txt'}>宝岛优选</View>
+          <View className={'catalog-box-tag-one-grid'}>
+            <View
+              onClick={() => chosenAction(-1)}
+              className={'catalog-box-tag-one-grid-item ' + (isChosen == -1 ? 'catalog-active' : '')}>全部</View>
+            <View
+              onClick={() => chosenAction(1)}
+              className={'catalog-box-tag-one-grid-item ' + (isChosen == 1 ? 'catalog-active' : '')}>是</View>
+            <View onClick={() => chosenAction(0)}
+                  className={'catalog-box-tag-one-grid-item ' + (isChosen == 0 ? 'catalog-active' : '')}>否</View>
+          </View>
+        </View>
+      </View>
+    )
   }
-
-  const symbolAction = async () => {
-    if (showSymbol) {
-      setShowSymbol(false);
-    } else {
-      setShowSymbol(true);
-      setShowCatalog(false)
-    }
-  }
-
 
   return (
     <ScrollView className="container">
+      <Staff/>
+      <AtSearchBar
+        showActionButton
+        actionName='搜索'
+        className={'searchBar'}
+        value={searchValue}
+        onChange={onChange}
+        placeholder={'搜索, 更多产品'}
+        onClear={onClearAction}
+        onActionClick={onActionClick}
+      />
       <View className={'catalog-title'}>
         <View className={'catalog-title-model'} onClick={catalogAction}>品类</View>
         <View className={'catalog-title-tag'} onClick={symbolAction}>分类</View>
@@ -281,17 +407,12 @@ const Index: React.FC = () => {
             className={order === 'asc' ? 'catalog-title-order-icon at-icon at-icon-chevron-up' : 'catalog-title-order-icon at-icon at-icon-chevron-down'}></View>
         </View>
       </View>
-      <View className={showCatalog ? 'catalog-box-tag ' : 'catalog-box-tag catalog-hidden'}>
-        <AtTag type='primary' circle active={isPopular == 1} onClick={popularAction.bind(this)}>爆款商品</AtTag>
-        <AtTag type='primary' circle active={isNew == 1} onClick={newAction.bind(this)}>新款推荐</AtTag>
-        <AtTag type='primary' circle active={isChosen == 1} onClick={chosenAction.bind(this)}>宝岛优选</AtTag>
-      </View>
+      {renderCatalog()}
       {renderSymbol(tempSymbolArray)}
       {(goodArray && goodArray.length > 0) && (
         <View className="cate-item">
-          <TwoColumnGoodList
+          <TwoColumnWholeGoodList
             goodList={goodArray}
-            showMore={false}
           />
         </View>
       )}
@@ -302,7 +423,7 @@ const Index: React.FC = () => {
             className={'cate-item-empty-img'}
             mode={'aspectFill'}
           ></Image>
-          <View className="cate-item-empty-txt"> 您寻找的商品还未上架</View>
+          <View className="cate-item-empty-txt">您寻找的商品还未上架</View>
         </View>
       )}
     </ScrollView>

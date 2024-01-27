@@ -6,7 +6,7 @@
 }
 
 .cate-item {
-  margin-top: 80px;
+  margin-top: 160px;
 }
 
 .cate-item-empty {
@@ -30,6 +30,15 @@
   }
 }
 
+.searchBar {
+  height: 75px;
+  padding-top: 30px;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  width: 100%;
+}
+
 .catalog-title {
   display: flex;
   flex-direction: row;
@@ -41,7 +50,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: fixed;
   z-index: 1000;
-  top: 0;
+  top: 76px;
 
   &-model {
     width: 33%;
@@ -75,18 +84,43 @@
 
 .catalog-box-tag {
   width: 650px;
-  height: 80px;
   display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  padding: 30px 50px 30px 50px;
+  flex-direction: column;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 30px 50px 30px 50px;
   position: fixed;
+  top: 153px;
   z-index: 1001;
-  top: 78px;
   background-color: #fff;
   animation: slideDown 0.5s ease forwards;
+
+  &-one {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    color: #444;
+    font-size: 26px;
+
+    &-txt {
+      margin-bottom: 20px;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    &-grid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      &-item {
+        border: #444 1px solid;
+        border-radius: 20px;
+        padding: 3px 20px;
+        margin: 18px 55px 18px 0;
+      }
+    }
+  }
 }
 
 .catalog-box-model {
@@ -97,7 +131,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 30px 50px 30px 50px;
   position: fixed;
-  top: 78px;
+  top: 153px;
   z-index: 1001;
   background-color: #fff;
   animation: slideDown 0.5s ease forwards;

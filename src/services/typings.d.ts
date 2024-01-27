@@ -122,6 +122,10 @@ declare namespace Params {
     keywordId?: string;
   }
 
+  type AdviceParam = {
+    msg?: string;
+  }
+
   type CatalogParam = {
     isPopular?: number;
     isNew?: number;
@@ -129,6 +133,22 @@ declare namespace Params {
     isChosen?: number;
     symbolId?: string;
     place?: number;
+    searchValue?: string;
+  }
+
+  type FootprintEntity = {
+    id?: string;
+    goodId?: string;
+    createTime?: number;
+    url?: string;
+    goodTitle?: string;
+    goodBrief?: string;
+  }
+
+  type KeywordItem = {
+    keyword?: string;
+    keywordId?: string;
+    isHot?: number;
   }
 
   type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'TRACE' | 'CONNECT';

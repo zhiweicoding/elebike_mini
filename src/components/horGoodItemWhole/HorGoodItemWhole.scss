@@ -1,18 +1,15 @@
-.horGoodList-item {
+.horGoodListWhole-item {
   display: inline-block;
   height: auto;
-  width: 680.5px;
-  margin-left: 30px;
+  width: 730px;
   overflow: hidden;
-
-  &:last-child {
-    margin-right: 30px;
-  }
+  background-color: white;
 
   &-img {
-    height: 256.76px;
-    width: 680.5px;
+    height: 260px;
+    width: 710px;
     margin-bottom: 20px;
+    border-radius: 25px;
   }
 
   &-grid {
@@ -22,6 +19,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background-color: white;
 
     &-title {
       color: #333;
