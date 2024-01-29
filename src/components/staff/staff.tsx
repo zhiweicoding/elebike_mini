@@ -9,8 +9,8 @@ const Staff: React.FC = () => {
 
   const goToStaff = () => {
     // 跳转回到首页
-    Taro.switchTab({
-      url: '/pages/home/home',
+    Taro.navigateTo({
+      url: '/pages/store/list/list',
     });
   };
 

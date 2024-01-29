@@ -1,0 +1,45 @@
+.container {
+  background: #f4f4f4;
+}
+
+.head {
+  display: flex;
+  flex-direction: row;
+  color: #333333;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  height: 100px;
+
+  &-order {
+    display: flex;
+    width: 150px;
+    padding: 0 30px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    &-txt {
+      font-size: 26px;
+    }
+
+    &-icon {
+      margin-left: 20px;
+    }
+  }
+
+  &-searchBar {
+    width: 540px;
+  }
+}
+
+.store-list-list {
+  margin-top: 120px;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  height: 1300px;
+}

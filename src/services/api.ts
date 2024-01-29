@@ -8,6 +8,8 @@ const API = {
   SymbolList: apiUrl + "v1/api/symbol/list",
   CatalogList: apiUrl + "v1/api/catalog/query",
   AdviceSave: apiUrl + "v1/api/advice/save",
+  StoreList: apiUrl + "v1/api/store/list",
+  StoreDetail: apiUrl + "v1/api/store/detail",
   // SearchIndex: apiUrl + "v1/api/search/query",
   // SearchHelper: apiUrl + "v1/api/search/help",
   // SearchResult: apiUrl + "v1/api/search/redirect",
@@ -57,6 +59,28 @@ export async function querySymbol(isCatalog: boolean): Promise<Params.SymbolList
     {
       isCatalog: isCatalog
     },
+  ).then((res) => {
+    return res.msgBody;
+  });
+}
+
+export async function queryStore(body: Params.StoreVo): Promise<Params.StoreBean[]> {
+  return util.request(
+    API.StoreList,
+    body,
+    "POST",
+    'application/json'
+  ).then((res) => {
+    return res.msgBody;
+  });
+}
+
+export async function queryStoreDetail(body: Params.StoreVo): Promise<Params.StoreBean> {
+  return util.request(
+    API.StoreDetail,
+    body,
+    "POST",
+    'application/json'
   ).then((res) => {
     return res.msgBody;
   });

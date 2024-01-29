@@ -6,7 +6,6 @@ import {
   Image, ScrollView,
 } from '@tarojs/components'
 import {queryGoodDetail} from "@bike/services/api";
-import Staff from "@bike/components/staff/staff";
 
 const Index: React.FC = () => {
   const [goodItem, setGoodItem] = useState<Params.GoodItem>({});
@@ -87,7 +86,6 @@ const Index: React.FC = () => {
 
   return (
     <View className="contain">
-      <Staff/>
       <ScrollView
         className={'contain-scroll'}
       >

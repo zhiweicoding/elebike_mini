@@ -7,6 +7,9 @@ export default {
     'pages/webview/webview',
     'pages/mine/feedback/feedback',
     'pages/mine/footprint/footprint',
+    'pages/store/list/list',
+    'pages/store/detail/detail',
+    'pages/store/city/city',
     'pages/error/error',
   ],
   window: {
@@ -40,5 +43,11 @@ export default {
         selectedIconPath: 'assets/peopleC.png',
       },
     ],
+  },
+  requiredPrivateInfos: ['getFuzzyLocation'],
+  permission: {
+    'scope.userFuzzyLocation': {
+      desc: '你的位置信息将用于小程序位置接口的效果展示'
+    }
   },
 }

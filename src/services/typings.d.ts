@@ -151,5 +151,44 @@ declare namespace Params {
     isHot?: number;
   }
 
+  type StoreBean = {
+    storeId?: string;
+    storeName?: string;
+    storeDesc?: string;
+    storeLogo?: string;
+    phoneNum?: string;
+    backupPhoneNum?: string;
+    staffWx?: string;
+    address?: string;
+    lnglat?: string;
+    licenseUrl?: string;
+    isDelete?: number;
+    createTime?: number;
+    modifyTime?: number;
+    distance?: number;
+    lng?: number;
+    lat?: number;
+    checked?: boolean;
+  };
+
+  type StoreVo = {
+    cityName?: string;
+    searchVal?: string;
+    storeId?: string;
+    lng?: number;
+    lat?: number;
+  };
+
+  type CitySubItem = {
+    name: string;
+    lnglat: number[];
+  };
+
+  type CityItem = {
+    title: string;
+    key: string;
+    items: CitySubItem[];
+  };
+
   type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'TRACE' | 'CONNECT';
 }
