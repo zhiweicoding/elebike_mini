@@ -50,6 +50,9 @@ const Index: React.FC = () => {
     });
   }
   const storeAction = () => {
+    Taro.navigateTo({
+      url: '/pages/store/list/list'
+    });
   }
 
   return (

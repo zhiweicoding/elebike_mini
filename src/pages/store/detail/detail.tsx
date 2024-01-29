@@ -1,80 +1,89 @@
 import React, {useState, useEffect} from 'react'
-import Taro, {useDidShow, useDidHide, useShareAppMessage, usePageScroll} from '@tarojs/taro';
+import Taro, {useDidShow, useDidHide, useShareAppMessage, useRouter} from '@tarojs/taro';
 import './detail.scss'
 import {
-  Text,
   View,
-  Swiper,
-  SwiperItem,
-  Navigator,
-  Image,
+  Image, Switch,
 } from '@tarojs/components'
-import {AtSearchBar} from 'taro-ui'
-import {queryHome} from '@bike/services/api';
-import HorGoodList from "@bike/components/horGoodList/HorGoodList";
-import TwoColumnGoodList from "@bike/components/twoColumnGoodList/TwoColumnGoodList";
-import Staff from "@bike/components/staff/staff";
+import {AtButton, AtDivider, AtIcon, AtRate} from 'taro-ui'
+import {queryCatalog, queryStoreDetail} from '@bike/services/api';
+import TwoColumnWholeGoodList from "@bike/components/twoColumnWholeGoodList/TwoColumnWholeGoodList";
+import map from '@bike/assets/map.png';
 
 const Index: React.FC = () => {
-  const defaultBanner: Params.Banner[] = [
-    {
-      "imageUrl": "https://lg-qrm18qcm-1255940368.cos.ap-shanghai.myqcloud.com/rabbish/1.jpg",
-      "link": "",
-      "id": "1"
-    }
-  ]
+  const [goodArray, setGoodArray] = useState<Params.GoodItem[]>([]);
+  const [detail, setDetail] = useState<Params.StoreBean>({
+    storeId: ''
+  });
+  const router = useRouter();
+  const {storeId} = router.params; // 获取传递的参数
 
-  const [banner, setBanner] = useState<Params.Banner[]>(defaultBanner);
-  const [topics, setTopics] = useState<Params.GoodItem[]>([]);
-  const [floorGoods, setFloorGoods] = useState<Params.FloorGood[]>([]);
-  const [searchValue, setSearchValue] = useState<string>('');
-
-
-  useEffect(() => {
-    //componentDidMount
-    loadHomeData().then(r => console.log(r));
-    // 返回的函数将在组件卸载时执行
-    return () => {
-      //componentWillUnmount
-    };
-  }, []);
-
-  const loadHomeData = async () => {
+  const loadData = async (param: Params.CatalogParam) => {
     try {
-      const response: Params.HomeEntity = await queryHome();
+      Taro.showLoading({
+        title: '加载中',
+      });
+      const response: Params.CatalogEntity = await queryCatalog(param);
       if (response) {
-        if (response.banners && response.banners.length > 0) {
-          setBanner(response.banners);
-        }
-        if (response.topics && response.topics.length > 0) {
-          setTopics(response.topics);
-        }
-        if (response.floorGoods && response.floorGoods.length > 0) {
-          setFloorGoods(response.floorGoods);
-        }
-      } else {
-        console.warn(`queryHome response is null`)
+        Taro.hideLoading();
+        setGoodArray(response.goodsList);
       }
     } catch (error) {
       console.error(error)
     }
   };
 
-  const onChange = (value: string) => {
-    setSearchValue(value);
+  const loadDetail = async () => {
+    try {
+      Taro.showLoading({
+        title: '加载中',
+      });
+      console.log(`storeId:${storeId}`)
+      const param: Params.StoreBean = {
+        storeId: storeId
+      };
+      const response: Params.StoreBean = await queryStoreDetail(param);
+      if (response) {
+        Taro.hideLoading();
+        Taro.getStorage({
+          key: 'defaultStoreId',
+          success: function (res) {
+            const defaultStoreId = res.data;
+            if (defaultStoreId && defaultStoreId !== '') {
+              response.checked = response.storeId === defaultStoreId;
+            } else {
+              response.checked = false;
+            }
+            setDetail(response);
+          },
+          fail: function () {
+            response.checked = false;
+            setDetail(response);
+          }
+        })
+
+      }
+    } catch (error) {
+      console.error(error)
+    }
   };
 
-  const onActionClick = () => {
-    console.log('开始搜索');
-    Taro.setStorage({
-      key: "searchValueRouter",
-      data: searchValue
-    }).then(() => {
-      Taro.switchTab({
-        url: `/pages/store/detail/detail?id=${id}`
-      });
-    });
-  };
+  useEffect(() => {
+    //componentDidMount
+    loadData({
+      symbolId: '-1',
+      place: -1,
+      order: 'asc',
+      isChosen: -1,
+      isNew: -1,
+      isPopular: -1,
+      searchValue: '',
+    }).then(r => console.log(r));
+    loadDetail().then(r => console.log(r));
+    return () => {
+      //componentWillUnmount
+    };
+  }, []);
 
   useDidShow(() => {
     console.log('页面显示');
@@ -92,77 +101,117 @@ const Index: React.FC = () => {
     }
   });
 
-  const swiperAction = (link: string) => {
-    console.log(link)
-    Taro.navigateTo({
-      url: `/pages/webview/webview?url=${link}`
+  const callPhone = (event) => {
+    const phoneNum = event.currentTarget.dataset.phoneNum;
+    Taro.makePhoneCall({
+      phoneNumber: phoneNum
     });
+  }
+
+  const goToMap = (event) => {
+    const lat: number = event.currentTarget.dataset.lat;
+    const lng: number = event.currentTarget.dataset.lng;
+    Taro.openLocation({
+      latitude: lat,
+      longitude: lng,
+      scale: 18
+    })
+  }
+
+  const goToStaff = () => {
+    const staffWx=detail.staffWx;
+    Taro.openCustomerServiceChat({
+      extInfo: {url: `${staffWx}`},
+      corpId: 'ww115db6fd649631c9',
+      success: function (res) {
+        console.log(res);
+      }
+    })
   };
 
-  usePageScroll((res) => {
-    console.log(res)
-  });
+  const handleSwitchChange = () => {
+    detail.checked = !detail.checked;
+    if (detail.checked) {
+      Taro.setStorage({
+        key: 'defaultStoreId',
+        data: storeId
+      }).then(() => {
+        Taro.showToast({
+          title: '设置成功',
+          icon: 'success',
+          duration: 2000
+        })
+      });
+    } else {
+      Taro.setStorage({
+        key: 'defaultStoreId',
+        data: ''
+      }).then(() => {
+        Taro.showToast({
+          title: '修改成功',
+          icon: 'success',
+          duration: 2000
+        })
+      });
+    }
+
+  };
 
   return (
     <View className='container'>
-      <Staff/>
-      <Swiper
-        duration={1000}
-        autoplay={true}
-        className={'banner'}
-        indicatorDots={true}
-        interval={3000}
-      >
-        {banner.map((item) => {
-          return (
-            <SwiperItem key={item.id} onClick={() => swiperAction(item.link)}>
-              <Navigator url={item.link}>
-                <Image mode={'aspectFill'} fadeIn={true} src={item.imageUrl}></Image>
-              </Navigator>
-            </SwiperItem>
-          )
-        })}
-      </Swiper>
-      <AtSearchBar
-        showActionButton
-        actionName='搜索'
-        className={'searchBar'}
-        value={searchValue}
-        onChange={onChange}
-        placeholder={'搜索, 更多产品'}
-        onActionClick={onActionClick}
-      />
-      {topics.length > 0 && (
-        <View className="a-section ">
-          <View className="a-section-title">
-            <View>
-              <Navigator openType="switchTab" url={'/pages/catalog/catalog'}>
-                <Text className="txt">精选推荐</Text>
-              </Navigator>
+      <View className={'sl'}>
+        <View className="sl-head">
+          <Image
+            mode={'aspectFit'}
+            className={'sl-head-img'}
+            src={detail.storeLogo || ``}
+          />
+          <View className="sl-head-left">
+            <View className={`sl-head-left-line`}>
+              {detail.storeName}
             </View>
+            <AtRate value={5}/>
           </View>
-          <HorGoodList
-            goodList={topics}
+        </View>
+        <View className="sl-desc" onClick={goToMap} data-lng={detail.lng}
+              data-lat={detail.lat}>
+          <View className={'sl-desc-item'}>
+            <AtIcon value={'map-pin'} size={16} color={'#999'}/>
+            {'   ' + detail.address}
+          </View>
+          <Image src={map} className={`sl-desc-icon`} mode={`aspectFit`}/>
+        </View>
+        <View className="sl-mid">
+          <View className={'sl-mid-item'} onClick={callPhone} data-phone-num={detail.phoneNum}>
+            <AtIcon value={'phone'} size={20} color={'#999'}/>
+            <View className={'sl-mid-item-desc'}>{detail.phoneNum}</View>
+          </View>
+          <View className={'sl-mid-item'} data-phone-num={detail.backupPhoneNum} onClick={callPhone}>
+            <AtIcon value={'phone'} size={20} color={'#999'}/>
+            <View className={'sl-mid-item-desc'}>{detail.backupPhoneNum}</View>
+          </View>
+        </View>
+        <View className="sl-msg">{detail.storeDesc}</View>
+        <View className="sl-last">
+          <View className={'sl-last-item'}>
+            <View className={'sl-last-item-txt'}>默认门店</View>
+            <Switch className={'sl-last-item-switch'}
+                    checked={detail.checked}
+                    onChange={() => handleSwitchChange()}/>
+          </View>
+          <AtButton className={`sl-last-btn`} type='secondary' size='small'
+                    data-good-id={detail.storeId}
+                    onClick={goToStaff}>微信沟通</AtButton>
+        </View>
+      </View>
+      <AtDivider className={'store-line'} content='商品推荐'/>
+      {(goodArray && goodArray.length > 0) && (
+        <View className="cate-item">
+          <TwoColumnWholeGoodList
+            goodList={goodArray}
           />
         </View>
       )}
-      {floorGoods.map((item) => {
-        return (
-          <>
-            {item.goodsList.length > 0 && (
-              <View className="floor-good-grid" key={item.id}>
-                <View className="floor-good-grid-title">{item.name}</View>
-                <TwoColumnGoodList
-                  goodList={item.goodsList}
-                  floorName={item.name}
-                  floorId={item.id}
-                />
-              </View>
-            )}
-          </>
-        )
-      })}
-
     </View>
   )
 }

@@ -40,7 +40,7 @@ const List: React.FC = () => {
           key: 'defaultStoreId',
           success: function (res) {
             const defaultStoreId = res.data;
-            if (defaultStoreId) {
+            if (defaultStoreId && defaultStoreId !== '') {
               response.map(item => {
                 if (item.storeId === defaultStoreId) {
                   item.checked = true;
@@ -120,19 +120,30 @@ const List: React.FC = () => {
   const handleSwitchChange = (storeId: string, checked: boolean) => {
     if (checked) {
       setSelectedStoreId(storeId);
+      Taro.setStorage({
+        key: 'defaultStoreId',
+        data: storeId
+      }).then(() => {
+        Taro.showToast({
+          title: '设置成功',
+          icon: 'success',
+          duration: 2000
+        })
+      });
     } else if (storeId === selectedStoreId) {
       setSelectedStoreId(null);
+      Taro.setStorage({
+        key: 'defaultStoreId',
+        data: ''
+      }).then(() => {
+        Taro.showToast({
+          title: '设置成功',
+          icon: 'success',
+          duration: 2000
+        })
+      });
     }
-    Taro.setStorage({
-      key: 'defaultStoreId',
-      data: storeId
-    }).then(() => {
-      Taro.showToast({
-        title: '设置成功',
-        icon: 'success',
-        duration: 2000
-      })
-    });
+
   };
 
   return (

@@ -1,6 +1,7 @@
 import util from "../utils/util";
 
-const apiUrl: string = "http://localhost:8082/proxy/";
+// const apiUrl: string = "http://localhost:8082/proxy/";
+const apiUrl: string = "https://api.zhiweicoding.xyz/";
 
 const API = {
   HomeUrl: apiUrl + "v1/api/home/query",

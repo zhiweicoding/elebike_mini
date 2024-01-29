@@ -13,8 +13,7 @@ export type StoreItemProps = {
 
 const StoreItem: React.FC<StoreItemProps> = (props) => {
 
-  const jumpDetail = async (event: any) => {
-    const storeId = event.currentTarget.dataset.storeId;
+  const jumpDetail = async (storeId:string) => {
     Taro.navigateTo({
       url: `/pages/store/detail/detail?storeId=${storeId}`
     });
@@ -87,15 +86,14 @@ const StoreItem: React.FC<StoreItemProps> = (props) => {
       <View className="sl-last">
         <View className={'sl-last-item'}>
           <View className={'sl-last-item-txt'}>默认门店</View>
-          <Switch className={'sl-last-item-switch'} data-store-id={props.item.storeId} checked={props.checked} onChange={switchChangeAction}/>
+          <Switch className={'sl-last-item-switch'} data-store-id={props.item.storeId} checked={props.checked}
+                  onChange={switchChangeAction}/>
         </View>
         <AtButton className={`sl-last-btn`} type='secondary' size='small'
-                  data-good-id={props.item.storeId}
-                  onClick={jumpDetail}>查看门店信息</AtButton>
+                  onClick={() => jumpDetail(props.item.storeId!)}>查看门店信息</AtButton>
       </View>
     </View>
-  )
-    ;
+  );
 };
 
 export default StoreItem;

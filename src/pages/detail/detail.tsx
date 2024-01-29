@@ -5,7 +5,8 @@ import {
   View,
   Image, ScrollView,
 } from '@tarojs/components'
-import {queryGoodDetail} from "@bike/services/api";
+import {queryGoodDetail, queryStoreDetail} from "@bike/services/api";
+import {AtButton} from "taro-ui";
 
 const Index: React.FC = () => {
   const [goodItem, setGoodItem] = useState<Params.GoodItem>({});
@@ -84,6 +85,44 @@ const Index: React.FC = () => {
     console.log(res)
   });
 
+  const goToStaff = () => {
+    Taro.getStorage({
+      key: 'defaultStoreId',
+      success: function (res) {
+        const defaultStoreId = res.data;
+        if (defaultStoreId && defaultStoreId !== '') {
+          queryStoreDetail({
+            storeId: defaultStoreId
+          }).then(r => {
+            const staffWx = r.staffWx;
+            if (staffWx) {
+              Taro.openCustomerServiceChat({
+                extInfo: {url: `${staffWx}`},
+                corpId: 'ww115db6fd649631c9',
+                success: function (res) {
+                  console.log(res);
+                }
+              })
+            } else {
+              Taro.navigateTo({
+                url: '/pages/store/list/list',
+              });
+            }
+          })
+        } else {
+          Taro.navigateTo({
+            url: '/pages/store/list/list',
+          });
+        }
+      },
+      fail: function () {
+        Taro.navigateTo({
+          url: '/pages/store/list/list',
+        });
+      }
+    })
+  };
+
   return (
     <View className="contain">
       <ScrollView
@@ -95,6 +134,8 @@ const Index: React.FC = () => {
           )
         })}
       </ScrollView>
+      <AtButton className={`contain-staff`} type='secondary'
+                onClick={goToStaff}>联系微信客服</AtButton>
     </View>
   )
 }
