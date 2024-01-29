@@ -3,6 +3,7 @@ import sr from 'sr-sdk-wxapp'
 
 import './app.scss'
 import './custom-theme.scss'
+import Taro from "@tarojs/taro";
 
 
 /**
@@ -51,7 +52,37 @@ import './custom-theme.scss'
   })
 
 class App extends Component<PropsWithChildren>  {
-  componentDidMount () {}
+  componentDidMount () {
+    const updateManager = Taro.getUpdateManager();
+
+    updateManager.onCheckForUpdate((res) => {
+      // Called when a new version is checked
+      console.log(res.hasUpdate);
+    });
+
+    updateManager.onUpdateReady(() => {
+      // New version downloaded
+      Taro.showModal({
+        title: '更新提示',
+        content: '新版本已经准备好，是否重启小程序？',
+        success: (res) => {
+          if (res.confirm) {
+            // Restart the app
+            updateManager.applyUpdate();
+          }
+        }
+      });
+    });
+
+    updateManager.onUpdateFailed(() => {
+      // New version download failed
+      Taro.showModal({
+        title: '更新提示',
+        content: '新版本下载失败',
+        showCancel: false
+      });
+    });
+  }
 
   componentDidShow () {}
 

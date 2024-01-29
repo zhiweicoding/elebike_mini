@@ -48,9 +48,11 @@ const List: React.FC = () => {
               })
             }
             setList(response);
+            setSelectedStoreId(defaultStoreId)
           },
           fail: function () {
             setList(response);
+            setSelectedStoreId('')
           }
         })
 
