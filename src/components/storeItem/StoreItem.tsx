@@ -13,7 +13,7 @@ export type StoreItemProps = {
 
 const StoreItem: React.FC<StoreItemProps> = (props) => {
 
-  const jumpDetail = async (storeId:string) => {
+  const jumpDetail = async (storeId: string) => {
     Taro.navigateTo({
       url: `/pages/store/detail/detail?storeId=${storeId}`
     });
@@ -78,10 +78,14 @@ const StoreItem: React.FC<StoreItemProps> = (props) => {
           <AtIcon value={'phone'} size={20} color={'#999'}/>
           <View className={'sl-mid-item-desc'}>{props.item.phoneNum}</View>
         </View>
-        <View className={'sl-mid-item'} data-phone-num={props.item.backupPhoneNum} onClick={callPhone}>
-          <AtIcon value={'phone'} size={20} color={'#999'}/>
-          <View className={'sl-mid-item-desc'}>{props.item.backupPhoneNum}</View>
-        </View>
+        {
+          props.item.backupPhoneNum && props.item.backupPhoneNum != '' && (
+            <View className={'sl-mid-item'} data-phone-num={props.item.backupPhoneNum} onClick={callPhone}>
+              <AtIcon value={'phone'} size={20} color={'#999'}/>
+              <View className={'sl-mid-item-desc'}>{props.item.backupPhoneNum}</View>
+            </View>
+          )
+        }
       </View>
       <View className="sl-last">
         <View className={'sl-last-item'}>

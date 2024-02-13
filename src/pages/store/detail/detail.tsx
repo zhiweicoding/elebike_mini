@@ -119,7 +119,7 @@ const Index: React.FC = () => {
   }
 
   const goToStaff = () => {
-    const staffWx=detail.staffWx;
+    const staffWx = detail.staffWx;
     Taro.openCustomerServiceChat({
       extInfo: {url: `${staffWx}`},
       corpId: 'ww115db6fd649631c9',
@@ -186,10 +186,14 @@ const Index: React.FC = () => {
             <AtIcon value={'phone'} size={20} color={'#999'}/>
             <View className={'sl-mid-item-desc'}>{detail.phoneNum}</View>
           </View>
-          <View className={'sl-mid-item'} data-phone-num={detail.backupPhoneNum} onClick={callPhone}>
-            <AtIcon value={'phone'} size={20} color={'#999'}/>
-            <View className={'sl-mid-item-desc'}>{detail.backupPhoneNum}</View>
-          </View>
+          {
+            detail.backupPhoneNum && detail.backupPhoneNum != '' && (
+              <View className={'sl-mid-item'} data-phone-num={detail.backupPhoneNum} onClick={callPhone}>
+                <AtIcon value={'phone'} size={20} color={'#999'}/>
+                <View className={'sl-mid-item-desc'}>{detail.backupPhoneNum}</View>
+              </View>
+            )
+          }
         </View>
         <View className="sl-msg">{detail.storeDesc}</View>
         <View className="sl-last">
