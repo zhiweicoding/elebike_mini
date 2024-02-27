@@ -39,6 +39,10 @@
   width: 100%;
 }
 
+.searchBar::after {
+  border-bottom-width: 0;
+}
+
 .catalog-title {
   display: flex;
   flex-direction: row;

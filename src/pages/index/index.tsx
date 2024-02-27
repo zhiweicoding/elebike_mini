@@ -60,11 +60,20 @@ const Index: React.FC = () => {
     }
   };
 
-  const onChange = (value: string) => {
+  const onChangeAction = (value: string) => {
     setSearchValue(value);
   };
+  const onClearAction = async () => {
+    setSearchValue('');
+    Taro.setStorage({
+      key: "searchValueRouter",
+      data: ""
+    }).then(r => {
+      console.log(r)
+    });
+  }
 
-  const onActionClick = () => {
+  const onActionClickAction = () => {
     console.log('开始搜索');
     Taro.setStorage({
       key:"searchValueRouter",
@@ -128,9 +137,10 @@ const Index: React.FC = () => {
         actionName='搜索'
         className={'searchBar'}
         value={searchValue}
-        onChange={onChange}
+        onChange={onChangeAction}
         placeholder={'搜索, 更多产品'}
-        onActionClick={onActionClick}
+        onClear={onClearAction}
+        onActionClick={onActionClickAction}
       />
       {topics.length > 0 && (
         <View className="a-section ">

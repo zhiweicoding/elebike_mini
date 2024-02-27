@@ -142,16 +142,29 @@ const Index: React.FC = () => {
   });
 
   const selectPlace = async (event: any) => {
-    const place = event.currentTarget.dataset.place;
-    setPlace(place);
+    const p = event.currentTarget.dataset.place;
+    setPlace(p);
     setTempSymbolArray([])
     const tsa: Params.SymbolListItem[] = [];
     symbolArray.map((item) => {
-      if (item.place == place || item.symbolId == '-1') {
+      if (
+        (p === item.place || item.symbolId === '-1')
+        || (p === -1)
+      ) {
         tsa.push(item);
       }
+
     });
     setTempSymbolArray(tsa);
+    loadData({
+      symbolId: symbolId,
+      place: p,
+      order: order,
+      isChosen: isChosen,
+      isNew: isNew,
+      isPopular: isPopular,
+      searchValue: searchValue,
+    }).then(r => console.log(r));
   };
 
   //选择品类后重新加载
@@ -177,11 +190,12 @@ const Index: React.FC = () => {
     }).then(r => console.log(r));
   };
 
-  const onChange = (value: string) => {
+  const onChangeAction = (value: string) => {
+    console.log('adfa' + value)
     setSearchValue(value);
   };
 
-  const onActionClick = () => {
+  const onActionClickAction = () => {
     console.log('开始搜索');
     setShowSymbol(false);
     setShowCatalog(false)
@@ -310,7 +324,7 @@ const Index: React.FC = () => {
                 )
               } else {
                 return (
-                  <View data-place-id={item.id}
+                  <View data-place={item.id}
                         onClick={selectPlace}
                         className={'catalog-box-model-place-grid-item'}>{item.name}</View>
                 )
@@ -393,10 +407,10 @@ const Index: React.FC = () => {
         actionName='搜索'
         className={'searchBar'}
         value={searchValue}
-        onChange={onChange}
+        onChange={onChangeAction}
         placeholder={'搜索, 更多产品'}
         onClear={onClearAction}
-        onActionClick={onActionClick}
+        onActionClick={onActionClickAction}
       />
       <View className={'catalog-title'}>
         <View className={'catalog-title-model'} onClick={catalogAction}>品类</View>
