@@ -32,15 +32,35 @@
 
 .searchBar {
   height: 75px;
-  padding-top: 30px;
   position: fixed;
   z-index: 1000;
   top: 0;
   width: 100%;
+  background-color: #fff;
 }
 
-.searchBar::after {
-  border-bottom-width: 0;
+.searchBarBtn {
+  font-size: 21px;
+  width: 120px;
+  height: 40px;
+  line-height: 38px;
+}
+
+.nut-searchbar-content {
+  height: 75px;
+}
+
+.nut-searchbar-input {
+  font-size: 22px;
+}
+
+.nut-searchbar-icon {
+  margin-right: 20px;
+}
+
+.nut-searchbar-clear{
+  width: 32px;
+  height: 32px;
 }
 
 .catalog-title {

@@ -5,9 +5,9 @@ import {
   ScrollView,
   View,
 } from '@tarojs/components'
-import {AtSearchBar} from 'taro-ui'
 import {queryStore} from '@bike/services/api';
 import StoreItem from "@bike/components/storeItem/StoreItem";
+import {Button, SearchBar} from "@nutui/nutui-react-taro";
 
 const List: React.FC = () => {
   const [storeVo, setStoreVo] = useState<Params.StoreVo>({
@@ -67,16 +67,16 @@ const List: React.FC = () => {
     setStoreVo(storeVo);
   };
 
+  const onClearAction = () => {
+    storeVo.searchVal = '';
+    setStoreVo(storeVo);
+    loadData().then(r => console.log(r));
+  };
+
+
   const onActionClick = () => {
     console.log('开始搜索');
-    Taro.setStorage({
-      key: "searchValueRouter",
-      data: storeVo.searchVal
-    }).then(() => {
-      Taro.switchTab({
-        url: `/pages/catalog/catalog`
-      });
-    });
+    loadData().then(r => console.log(r));
   };
 
   useDidShow(() => {
@@ -156,14 +156,24 @@ const List: React.FC = () => {
           <View
             className={'head-order-icon at-icon at-icon-chevron-down'}></View>
         </View>
-        <AtSearchBar
-          showActionButton
-          actionName='搜索'
+        <SearchBar
+          shape="round"
           className={'head-searchBar'}
-          value={storeVo.searchVal!}
+          clearable={true}
           onChange={onChange}
+          value={storeVo.searchVal!}
+          onSearch={onActionClick}
           placeholder={'搜索, 更多产品'}
-          onActionClick={onActionClick}
+          onClear={onClearAction}
+          right={
+            <>
+              <Button shape="round" type="primary"
+                      className={'searchBarBtn'}
+                      onClick={onActionClick}>
+                搜索
+              </Button>
+            </>
+          }
         />
       </View>
       <ScrollView className={`store-list-list`} scrollY={true}>

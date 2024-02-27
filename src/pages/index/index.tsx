@@ -9,11 +9,11 @@ import {
   Navigator,
   Image,
 } from '@tarojs/components'
-import {AtSearchBar} from 'taro-ui'
 import {queryHome} from '@bike/services/api';
 import HorGoodList from "@bike/components/horGoodList/HorGoodList";
 import TwoColumnGoodList from "@bike/components/twoColumnGoodList/TwoColumnGoodList";
 import Staff from "@bike/components/staff/staff";
+import {Button, SearchBar} from "@nutui/nutui-react-taro";
 
 const Index: React.FC = () => {
   const defaultBanner: Params.Banner[] = [
@@ -63,6 +63,7 @@ const Index: React.FC = () => {
   const onChangeAction = (value: string) => {
     setSearchValue(value);
   };
+
   const onClearAction = async () => {
     setSearchValue('');
     Taro.setStorage({
@@ -132,15 +133,34 @@ const Index: React.FC = () => {
           )
         })}
       </Swiper>
-      <AtSearchBar
-        showActionButton
-        actionName='搜索'
+      {/*<AtSearchBar*/}
+      {/*  showActionButton*/}
+      {/*  actionName='搜索'*/}
+      {/*  className={'searchBar'}*/}
+      {/*  value={searchValue}*/}
+      {/*  onChange={onChangeAction}*/}
+      {/*  placeholder={'搜索, 更多产品'}*/}
+      {/*  onClear={onClearAction}*/}
+      {/*  onActionClick={onActionClickAction}*/}
+      {/*/>*/}
+      <SearchBar
+        shape="round"
         className={'searchBar'}
-        value={searchValue}
+        clearable={true}
         onChange={onChangeAction}
+        value={searchValue}
+        onSearch={onActionClickAction}
         placeholder={'搜索, 更多产品'}
         onClear={onClearAction}
-        onActionClick={onActionClickAction}
+        right={
+          <>
+            <Button shape="round" type="primary"
+                    className={'searchBarBtn'}
+                    onClick={onActionClickAction}>
+              搜索
+            </Button>
+          </>
+        }
       />
       {topics.length > 0 && (
         <View className="a-section ">

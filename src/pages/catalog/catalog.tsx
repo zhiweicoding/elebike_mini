@@ -8,9 +8,9 @@ import {
 } from '@tarojs/components'
 import {queryCatalog, querySymbol} from '@bike/services/api';
 import noData from '@bike/assets/no-data.png';
-import {AtSearchBar} from "taro-ui";
 import Staff from "@bike/components/staff/staff";
 import TwoColumnWholeGoodList from "@bike/components/twoColumnWholeGoodList/TwoColumnWholeGoodList";
+import {Button, SearchBar} from "@nutui/nutui-react-taro";
 
 const Index: React.FC = () => {
 
@@ -190,12 +190,20 @@ const Index: React.FC = () => {
     }).then(r => console.log(r));
   };
 
-  const onChangeAction = (value: string) => {
-    console.log('adfa' + value)
+  const changeAction = (value: string) => {
     setSearchValue(value);
   };
+  const clearAction = () => {
+    setSearchValue('');
+    Taro.setStorage({
+      key: "searchValueRouter",
+      data: ""
+    }).then(r => {
+      console.log(r)
+    });
+  };
 
-  const onActionClickAction = () => {
+  const actionClick = () => {
     console.log('开始搜索');
     setShowSymbol(false);
     setShowCatalog(false)
@@ -285,24 +293,6 @@ const Index: React.FC = () => {
       setShowSymbol(true);
       setShowCatalog(false)
     }
-  }
-  const onClearAction = async () => {
-    setSearchValue('');
-    Taro.setStorage({
-      key: "searchValueRouter",
-      data: ""
-    }).then(r => {
-      console.log(r)
-      loadData({
-        symbolId: symbolId,
-        place: place,
-        order: order,
-        isChosen: isChosen,
-        isNew: isNew,
-        isPopular: isPopular,
-        searchValue: "",
-      }).then(r => console.log(r));
-    });
   }
 
   const renderSymbol = (sa: Params.SymbolListItem[]) => {
@@ -402,15 +392,35 @@ const Index: React.FC = () => {
   return (
     <ScrollView className="container">
       <Staff/>
-      <AtSearchBar
-        showActionButton
-        actionName='搜索'
+      {/*<AtSearchBar*/}
+      {/*  showActionButton*/}
+      {/*  actionName='搜索'*/}
+      {/*  className={'searchBar'}*/}
+      {/*  value={searchValue}*/}
+      {/*  onChange={changeAction}*/}
+      {/*  onConfirm={actionClick}*/}
+      {/*  placeholder={'搜索, 更多产品'}*/}
+      {/*  onClear={clearAction}*/}
+      {/*  onActionClick={actionClick}*/}
+      {/*/>*/}
+      <SearchBar
+        shape="round"
         className={'searchBar'}
+        clearable={true}
+        onChange={changeAction}
         value={searchValue}
-        onChange={onChangeAction}
+        onSearch={actionClick}
         placeholder={'搜索, 更多产品'}
-        onClear={onClearAction}
-        onActionClick={onActionClickAction}
+        onClear={clearAction}
+        right={
+          <>
+            <Button shape="round" type="primary"
+                    className={'searchBarBtn'}
+                    onClick={actionClick}>
+              搜索
+            </Button>
+          </>
+        }
       />
       <View className={'catalog-title'}>
         <View className={'catalog-title-model'} onClick={catalogAction}>品类</View>
