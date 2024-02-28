@@ -18,11 +18,11 @@ const Index: React.FC = () => {
     id: -1,
     name: '全部',
   }, {
-    id: 1,
-    name: '天津',
-  }, {
     id: 0,
     name: '无锡',
+  }, {
+    id: 1,
+    name: '天津',
   }];
 
   const [showSymbol, setShowSymbol] = useState<boolean>(false);
@@ -81,8 +81,13 @@ const Index: React.FC = () => {
 
   useDidShow(() => {
     const searchValueRouter = Taro.getStorageSync('searchValueRouter')
+    const placeArrayId = Taro.getStorageSync('placeArrayId')
     //如果存在symbolId，就设置为当前的symbolId
     const catalogSymbolId = Taro.getStorageSync('catalogSymbolId')
+    if (placeArrayId == 0 || placeArrayId == 1) {
+      setPlace(placeArrayId);
+      symbolAction().then(r => console.log(r));
+    }
     if (catalogSymbolId && catalogSymbolId != '-1') {
       setSymbolId(catalogSymbolId);
       Taro.setStorage({
@@ -144,6 +149,12 @@ const Index: React.FC = () => {
   const selectPlace = async (event: any) => {
     const p = event.currentTarget.dataset.place;
     setPlace(p);
+    Taro.setStorage({
+      key: "placeArrayId",
+      data: p
+    }).then(() => {
+      console.log(`setStorage placeArrayId ${p}`);
+    });
     setTempSymbolArray([])
     const tsa: Params.SymbolListItem[] = [];
     symbolArray.map((item) => {
@@ -392,17 +403,6 @@ const Index: React.FC = () => {
   return (
     <ScrollView className="container">
       <Staff/>
-      {/*<AtSearchBar*/}
-      {/*  showActionButton*/}
-      {/*  actionName='搜索'*/}
-      {/*  className={'searchBar'}*/}
-      {/*  value={searchValue}*/}
-      {/*  onChange={changeAction}*/}
-      {/*  onConfirm={actionClick}*/}
-      {/*  placeholder={'搜索, 更多产品'}*/}
-      {/*  onClear={clearAction}*/}
-      {/*  onActionClick={actionClick}*/}
-      {/*/>*/}
       <SearchBar
         shape="round"
         className={'searchBar'}

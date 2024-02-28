@@ -14,6 +14,7 @@ import HorGoodList from "@bike/components/horGoodList/HorGoodList";
 import TwoColumnGoodList from "@bike/components/twoColumnGoodList/TwoColumnGoodList";
 import Staff from "@bike/components/staff/staff";
 import {Button, SearchBar} from "@nutui/nutui-react-taro";
+import {AtTabs} from "taro-ui";
 
 const Index: React.FC = () => {
   const defaultBanner: Params.Banner[] = [
@@ -24,10 +25,13 @@ const Index: React.FC = () => {
     }
   ]
 
+  const tabList = [{title: '无锡'}, {title: '天津'}]
+
   const [banner, setBanner] = useState<Params.Banner[]>(defaultBanner);
   const [topics, setTopics] = useState<Params.GoodItem[]>([]);
   const [floorGoods, setFloorGoods] = useState<Params.FloorGood[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [tabIndex, setTabIndex] = useState<number>(0);
 
 
   useEffect(() => {
@@ -77,9 +81,9 @@ const Index: React.FC = () => {
   const onActionClickAction = () => {
     console.log('开始搜索');
     Taro.setStorage({
-      key:"searchValueRouter",
-      data:searchValue
-    }).then(()=>{
+      key: "searchValueRouter",
+      data: searchValue
+    }).then(() => {
       Taro.switchTab({
         url: `/pages/catalog/catalog`
       });
@@ -112,6 +116,17 @@ const Index: React.FC = () => {
   usePageScroll((res) => {
     console.log(res)
   });
+  const setTabAction = (val: number) => {
+    setTabIndex(val);
+    Taro.setStorage({
+      key: "placeArrayId",
+      data: val
+    }).then(() => {
+      Taro.switchTab({
+        url: `/pages/catalog/catalog`
+      });
+    });
+  }
 
   return (
     <View className='container'>
@@ -133,16 +148,6 @@ const Index: React.FC = () => {
           )
         })}
       </Swiper>
-      {/*<AtSearchBar*/}
-      {/*  showActionButton*/}
-      {/*  actionName='搜索'*/}
-      {/*  className={'searchBar'}*/}
-      {/*  value={searchValue}*/}
-      {/*  onChange={onChangeAction}*/}
-      {/*  placeholder={'搜索, 更多产品'}*/}
-      {/*  onClear={onClearAction}*/}
-      {/*  onActionClick={onActionClickAction}*/}
-      {/*/>*/}
       <SearchBar
         shape="round"
         className={'searchBar'}
@@ -162,6 +167,8 @@ const Index: React.FC = () => {
           </>
         }
       />
+      <AtTabs current={tabIndex} tabList={tabList} onClick={setTabAction}>
+      </AtTabs>
       {topics.length > 0 && (
         <View className="a-section ">
           <View className="a-section-title">
