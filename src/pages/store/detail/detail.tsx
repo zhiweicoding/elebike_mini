@@ -114,7 +114,9 @@ const Index: React.FC = () => {
     Taro.openLocation({
       latitude: lat,
       longitude: lng,
-      scale: 18
+      scale: 18,
+      name:detail.storeName,
+      address:detail.address
     })
   }
 

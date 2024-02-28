@@ -83,6 +83,13 @@ export async function queryStoreDetail(body: Params.StoreVo): Promise<Params.Sto
     "POST",
     'application/json'
   ).then((res) => {
+    const msgBody: Params.StoreBean = res.msgBody
+    const lnglat: string | any = msgBody.lnglat
+    if (lnglat && lnglat.indexOf(',') > 0) {
+      const ss: string[] = lnglat.split(',');
+      msgBody.lat = parseFloat(ss[0]);
+      msgBody.lng = parseFloat(ss[1]);
+    }
     return res.msgBody;
   });
 }
